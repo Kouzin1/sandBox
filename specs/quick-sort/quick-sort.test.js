@@ -15,14 +15,14 @@
 function quickSort(nums) {
   // code goes here
   if (nums.length <= 1) return nums;
-  const pivot = num[nums.length - 1];
+  const pivot = nums[nums.length - 1];
   const left = [];
   const right = [];
-  for (let i = 0; i < nums.length - 1, i++) {
+  for (let i = 0; i < nums.length - 1; i++) {
     if (nums[i] < pivot) {
-      left.push(nums[i])
+      left.push(nums[i]);
     } else {
-      right.push(nums[i])
+      right.push(nums[i]);
     }
   }
   const sortedLeft = quickSort(left);
