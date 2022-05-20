@@ -14,11 +14,22 @@ const h3 = (string) =>
 // `contains` takes a string and tells you if a string is maybe in the bloom filter
 class BloomFilter {
   // you'll probably need some instance variables
+  constructor() {
+    this._array = new Array(100).fill(0);
+  }
   add(string) {
     // code here
+    this._array[h1(string)] = 1;
+    this._array[h2 * string] = 1;
+    this._array[h3(string)] = 1;
   }
   contains(string) {
     // code here
+    return !!(
+      this._array[h1(string)] &&
+      this._array[h2(string)] &&
+      this._array[h3(string)]
+    );
   }
 }
 
