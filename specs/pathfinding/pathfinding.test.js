@@ -15,9 +15,74 @@
 // it is opinionated of how to do that and you do not have to do it
 // the way I did. however feel free to use it if you'd like
 const logMaze = require("./logger");
+const NO_ONE = 0;
+const BY_A = 1;
+const BY_B = 2;
+
+function generatedVisited(maze) {
+  const visited = [];
+  for (let y = 0; y < maze.length; y++) {
+    const yAxis = [];
+    for (let x = 0; x < maze[y].length; x++) {
+      const coordinate = {
+        close: maze[y][x] === 1,
+        length: 0,
+        openedBy: NO_ONE
+      }
+      yAxis.push(coordinate);
+    }
+    visited.push(yAxis);
+  }
+  return visited;
+}
+
 
 function findShortestPathLength(maze, [xA, yA], [xB, yB]) {
   // code goes here
+  const visited = generatedVisited(maze);
+  visited[yA][xA].openedBy = BY_A;
+  visited[yB][xB].openedBy = BY_B;
+  let aQueue = [visited[yA][xA]];
+  let bQueue = [visited[yB][xB]];
+  let iteration = 0;
+  while (aQueue.length && bQueue.length) {
+    iteration++;
+
+    let aNeighbors = [];
+    while(aQueue.length) {
+      const coordinate = aQueue.shift();
+      aNeighbors = aNeighbors.concat(getNeighbors(visited, coordinate.x, coordinate.y));
+    }
+     
+    for (let i = 0; i <  aNeighbors.length; i++) {
+      const neighbor = aNeighbors[i];
+      if (neighbor.openedBy === BY_B) {
+        return neighbor.length + iteration;
+      } else if (neighbor.openedBy === NO_ONE) {
+        neighbor.length = iteration;
+        neighbor.openedBy = BY_A;
+        aQueue.push(neighbor);
+      }
+    }
+  }
+  return -1;
+}
+
+function getNeighbors(visited, x, y) {
+  const neighbors = [];
+  if (y - 1 >= 0 && !visited[y - 1][x].closed) {
+    neighbors.push(visited[y - 1][x]);
+  }
+  if (y + 1 < visited[0].length && !visited[y + 1][x].closed){
+    neighbors.push(visited[y + 1][x]);
+  }
+  if (x - 1 >= 0 && !visited[y][x - 1].closed) { 
+    neighbors.push(visited[y][x - 1]);
+  }
+  if (x + 1 < visited.length && !visited[y][x + 1].closed){
+    neighbors.push(visited[y][x + 1]);
+  }
+  return neighbors;
 }
 
 // there is a visualization tool in the completed exercise
